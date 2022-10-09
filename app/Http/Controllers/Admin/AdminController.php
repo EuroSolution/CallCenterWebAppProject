@@ -40,14 +40,8 @@ class AdminController extends Controller
             $content->currency = $request->input('currency');
             $content->save();
             try{
-                if ($request->file('logo')) {
-                    $fileName = time() . '-' . $request->file('logo')->getClientOriginalName();
-                    $filePath = $request->file('logo')->path();
-                    $imageUrl = $this->uploadImageIK($fileName, $filePath, 'setting');
-                    $content->logo = $imageUrl ?? null;
-                }
-                if ($request->has('file')){
-                    $imageUrl = $this->uploadImage($request->file('file'), 'uploads/settings/');
+                if ($request->has('logo')){
+                    $imageUrl = $this->uploadImage($request->file('logo'), 'uploads/settings/');
                     $content->image = $imageUrl;
                 }
                 $content->save();
