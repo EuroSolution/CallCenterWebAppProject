@@ -98,11 +98,9 @@ class RestaurantController extends Controller
             $content->country = $request->input('country');
             $content->save();
             try{
-                if ($request->file('image')) {
-                    $fileName = time() . '-' . $request->file('image')->getClientOriginalName();
-                    $filePath = $request->file('image')->path();
-                    $imageUrl = $this->uploadImageIK($fileName, $filePath, 'restaurants');
-                    $content->image = $imageUrl ?? null;
+                if ($request->has('image')){
+                    $imageUrl = $this->uploadImage($request->file('image'), 'uploads/restaurants/');
+                    $content->image = $imageUrl ?? $content->image;
                 }
                 $content->save();
             }catch (\Exception $ex){
