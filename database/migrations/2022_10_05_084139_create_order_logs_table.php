@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('activity_by_id');
             $table->string('activity_by_name')->nullable();
             $table->string('status');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

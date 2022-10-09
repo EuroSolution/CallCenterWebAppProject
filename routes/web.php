@@ -33,6 +33,9 @@ Route::get('logout', function (){
     return redirect('login');
 })->name('logout');
 
+Route::get('getProductsByRestaurantId/{id}', [ProductController::class, 'getProductsByRestaurantId'])->name('getProductsByRestaurantId');
+Route::get('getProductSizes/{id}', [ProductController::class, 'getProductSizes'])->name('getProductSizes');
+
 Route::match(['get', 'post'], 'login', [AuthController::class, 'login'])->name('admin.login');
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (){
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -51,7 +54,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (){
     Route::delete('staff/destroy/{id}', [StaffController::class, 'destroy'])->name('staffDestroy');
 
 });
-Route::prefix('call-center')->name('callCenter.')->group(function (){
+Route::prefix('call-center')->name('callCenter.')->middleware('auth')->group(function (){
     Route::get('/dashboard', [CallCenterDashboard::class, 'index'])->name('dashboard');
 
     Route::get('categories', [CategoryController::class, 'index'])->name('categories');
@@ -74,9 +77,11 @@ Route::prefix('call-center')->name('callCenter.')->group(function (){
     Route::post('order/changeOrderStatus/{id}', [OrdersController::class, 'changeOrderStatus'])->name('changeOrderStatus');
 
 });
-Route::get('getProductsByRestaurantId/{id}', [ProductController::class, 'getProductsByRestaurantId'])->name('getProductsByRestaurantId');
-Route::get('getProductSizes/{id}', [ProductController::class, 'getProductSizes'])->name('getProductSizes');
-Route::prefix('restaurant')->name('restaurant.')->group(function (){
+
+Route::prefix('restaurant')->name('restaurant.')->middleware('auth')->group(function (){
     Route::get('/dashboard', [RestaurantDashboard::class, 'index'])->name('dashboard');
+    Route::get('orders', [RestaurantDashboard::class, 'orders'])->name('orders');
+    Route::get('order/show/{id}', [RestaurantDashboard::class, 'showOrderDetail'])->name('showOrder');
+    Route::post('order/changeOrderStatus/{id}', [RestaurantDashboard::class, 'changeOrderStatus'])->name('changeOrderStatus');
 });
 

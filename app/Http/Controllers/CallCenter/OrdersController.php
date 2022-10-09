@@ -115,6 +115,7 @@ class OrdersController extends Controller
                 'activity_by_id' => Auth::id(),
                 'activity_by_name' => Auth::user()->name,
                 'status' => 'Pending',
+                'note' => 'Order Created'
             ]);
 
             return redirect(route('call-center.showOrder', $order->id))->with('success', 'Order Created Successfully');
@@ -173,6 +174,7 @@ class OrdersController extends Controller
                 'activity_by_id' => Auth::id(),
                 'activity_by_name' => Auth::user()->name,
                 'status' => $order->status,
+                'note' => 'Order Updated'
             ]);
 
             return redirect()->back()->with('success', 'Order Updated Successfully');
@@ -186,6 +188,13 @@ class OrdersController extends Controller
         $content = Order::find($id);
         if ($content != null){
             $content->delete();
+            OrderLog::create([
+                'order_id' => $id,
+                'activity_by_id' => Auth::id(),
+                'activity_by_name' => Auth::user()->name,
+                'status' => 'Deleted',
+                'note' => 'Order Deleted'
+            ]);
             return true;
         }
         return false;
@@ -194,26 +203,15 @@ class OrdersController extends Controller
     public function changeOrderStatus(Request $request, $id)
     {
         $order = Order::where('id', $id)->first();
-
         if ($order != null) {
-//            if ($request->val == 'delivered'){
-//                $orderData = $order->first();
-//                Notification::create([
-//                    'data' => 'Order has been delivered',
-//                    'order_id' => $id,
-//                    'type' => 'order',
-//                    'receiver_id' => $orderData->customer_id,
-//                ]);
-//            }elseif ($request->val == 'in_process'){
-//                $orderData = $order->first();
-//                Notification::create([
-//                    'data' => 'Order has been moved to In Process from Refund',
-//                    'order_id' => $id,
-//                    'type' => 'order',
-//                    'receiver_id' => $orderData->customer_id,
-//                ]);
-//            }
             $order->update(['status' => $request->val]);
+            OrderLog::create([
+                'order_id' => $id,
+                'activity_by_id' => Auth::id(),
+                'activity_by_name' => Auth::user()->name,
+                'status' => $request->val,
+                'note' => 'Status Updated'
+            ]);
             return true;
         } else {
             return false;
