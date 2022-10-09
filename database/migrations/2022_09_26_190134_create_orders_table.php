@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number');
             $table->integer('restaurant_id');
             $table->integer('customer_id')->default(0);
             $table->string('customer_name');

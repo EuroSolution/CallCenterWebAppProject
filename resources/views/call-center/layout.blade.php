@@ -61,7 +61,7 @@
                 <a href="{{route('callCenter.dashboard')}}" class="nav-link">Home</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block" style="margin-top: 6px;">
-                <a href="#" class="nav-link">Orders</a>
+                <a href="{{route('callCenter.orders')}}" class="nav-link">Orders</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block" style="margin-top: 6px;">
                 <a href="#" class="nav-link">Queries</a>

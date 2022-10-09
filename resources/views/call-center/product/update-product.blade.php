@@ -51,6 +51,20 @@
                                             @if(Session::has('msg'))
                                                 <div class="alert alert-success">{{Session::get('msg')}}</div>
                                             @endif
+                                                <div class="form-group">
+                                                    <label for="restaurant">Select Restaurant</label>
+                                                    <select class="form-control  @error('restaurant') is-invalid @enderror" name="restaurant" id="restaurant">
+                                                        <option value="">Select</option>
+                                                        @foreach($restaurants as $restaurant)
+                                                            <option {{($content->restaurant_id == $restaurant->id || old('restaurant')==$restaurant->id) ? 'selected' : ''}} value="{{$restaurant->id}}">{{$restaurant->name ?? ''}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('restaurant')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Select Category</label>
                                                 <select class="form-control  @error('name') is-invalid @enderror" name="category" id="category">

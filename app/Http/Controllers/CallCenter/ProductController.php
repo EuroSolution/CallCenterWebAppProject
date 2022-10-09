@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CallCenter;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductSize;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
@@ -38,13 +39,14 @@ class ProductController extends Controller
             $this->validate($request, array(
                 'name' => 'required',
                 'category' => 'required',
-                'price'		=>	'numeric'
+                'restaurant' => 'required',
+                'price'	   => 'numeric'
             ));
 
             $product = Product::create([
                 'name' => $request->input('name'),
                 'category_id' => $request->input('category'),
-                'restaurant_id' => $request->input('restaurant_id') ?? 0,
+                'restaurant_id' => $request->input('restaurant') ?? 0,
                 'description' => $request->input('description'),
                 'price' => $request->input('price') ?? 0.00,
                 'slug' => $this->createSlug($request->input('name')),
@@ -72,7 +74,8 @@ class ProductController extends Controller
         }
 
         $categories = Category::get();
-        return view('call-center.product.add-product', compact('categories'));
+        $restaurants = Restaurant::where('status', 1)->get();
+        return view('call-center.product.add-product', compact('categories', 'restaurants'));
     }
 
 
@@ -87,9 +90,16 @@ class ProductController extends Controller
     {
         $content = Product::with('productSizes')->findOrFail($id);
         if ($request->method() == "POST"){
+            $this->validate($request, array(
+                'name' => 'required',
+                'category' => 'required',
+                'restaurant' => 'required',
+                'price'	   => 'numeric'
+            ));
 
             $content->name = $request->input('name');
             $content->description = $request->input('description');
+            $content->restaurant_id = $request->input('restaurant');
             $content->price = $request->input('price');
             $content->type = $request->input('type');
             if ($request->has('file')){
@@ -111,9 +121,9 @@ class ProductController extends Controller
             }
             return redirect()->back()->with('success', 'Product Updated successfully');
         }
-
+        $restaurants = Restaurant::where('status', 1)->get();
         $categories = Category::get();
-        return view('call-center.product.update-product', compact('content','categories'));
+        return view('call-center.product.update-product', compact('content','categories', 'restaurants'));
     }
 
     public function destroy($id)
@@ -134,5 +144,18 @@ class ProductController extends Controller
             }
         }
         return $slug;
+    }
+
+    public function getProductsByRestaurantId($id){
+        $products = Product::with('productSizes')->where('restaurant_id', $id)->select('id', 'name', 'price')->get();
+        return array('products' => $products);
+    }
+
+    public function getProductSizes($id){
+        $sizes = ProductSize::where('product_id', $id)->select('size', 'price')->get();
+        if ($sizes == null){
+            return array('size' => 'small', 'price' => 0);
+        }
+        return $sizes;
     }
 }

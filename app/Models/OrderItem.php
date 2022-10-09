@@ -11,4 +11,8 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id', 'product_id', 'price', 'size', 'quantity'
     ];
+
+    public function product(){
+        return $this->hasOne(Product::class, 'id', 'product_id');
+    }
 }

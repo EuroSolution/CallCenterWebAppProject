@@ -35,6 +35,12 @@
                     <p>Products</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{route('callCenter.orders')}}" class="nav-link {{request()->is('orders') ? 'active' : ''}}">
+                    <i class="nav-icon fas fa-cog"></i>
+                    <p>Orders</p>
+                </a>
+            </li>
 {{--            <li class="nav-item">--}}
 {{--                <a href="{{route('callCenter.restaurants')}}"--}}
 {{--                   class="nav-link {{ str_contains(url()->current(), 'restaurants') ? 'active' : '' }}">--}}

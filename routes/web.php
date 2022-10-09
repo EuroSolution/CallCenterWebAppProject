@@ -74,7 +74,8 @@ Route::prefix('call-center')->name('callCenter.')->group(function (){
     Route::post('order/changeOrderStatus/{id}', [OrdersController::class, 'changeOrderStatus'])->name('changeOrderStatus');
 
 });
-
+Route::get('getProductsByRestaurantId/{id}', [ProductController::class, 'getProductsByRestaurantId'])->name('getProductsByRestaurantId');
+Route::get('getProductSizes/{id}', [ProductController::class, 'getProductSizes'])->name('getProductSizes');
 Route::prefix('restaurant')->name('restaurant.')->group(function (){
     Route::get('/dashboard', [RestaurantDashboard::class, 'index'])->name('dashboard');
 });
