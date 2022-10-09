@@ -64,10 +64,8 @@ class RestaurantController extends Controller
                     'restaurant_id' => $content->id,
                 ]);
                 try{
-                    if ($request->file('image')) {
-                        $fileName = time() . '-' . $request->file('image')->getClientOriginalName();
-                        $filePath = $request->file('image')->path();
-                        $imageUrl = $this->uploadImageIK($fileName, $filePath, 'restaurants');
+                    if ($request->has('image')){
+                        $imageUrl = $this->uploadImage($request->file('image'), 'uploads/restaurants/');
                         $content->update(['image' => $imageUrl]);
                     }
                     return redirect()->back()->with('success', 'Restaurant Added Successfully');

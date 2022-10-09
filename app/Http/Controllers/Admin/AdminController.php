@@ -46,6 +46,10 @@ class AdminController extends Controller
                     $imageUrl = $this->uploadImageIK($fileName, $filePath, 'setting');
                     $content->logo = $imageUrl ?? null;
                 }
+                if ($request->has('file')){
+                    $imageUrl = $this->uploadImage($request->file('file'), 'uploads/settings/');
+                    $content->image = $imageUrl;
+                }
                 $content->save();
             }catch (\Exception $ex){
                 return redirect()->back()->with('error', 'Exception in while uploading image');
