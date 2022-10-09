@@ -42,7 +42,7 @@ class AdminController extends Controller
             try{
                 if ($request->has('logo')){
                     $imageUrl = $this->uploadImage($request->file('logo'), 'uploads/settings/');
-                    $content->image = $imageUrl;
+                    $content->logo = $imageUrl;
                 }
                 $content->save();
             }catch (\Exception $ex){
