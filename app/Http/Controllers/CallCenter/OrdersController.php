@@ -118,7 +118,7 @@ class OrdersController extends Controller
                 'note' => 'Order Created'
             ]);
 
-            return redirect(route('call-center.showOrder', $order->id))->with('success', 'Order Created Successfully');
+            return redirect(route('callCenter.showOrder', $order->id))->with('success', 'Order Created Successfully');
         }
         $restaurants = Restaurant::where('status', 1)->get();
         $products = array();
