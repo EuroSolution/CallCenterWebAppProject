@@ -56,7 +56,7 @@ class RestaurantController extends Controller
                     'name' => $request->input('name'),
                     'phone' => $request->input('phone'),
                     'email' => $request->input('email'),
-                    'password' => Hash::make($password),
+                    'password' => Hash::make('admin@123'),
                     'role_id' => 3,
                     'role_name' => 'Restaurant',
                     'status' => 1,
