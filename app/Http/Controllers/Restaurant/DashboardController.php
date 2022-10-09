@@ -11,14 +11,21 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function index(){
-        $orders = Order::where('restaurant_id', Auth::user()->restaurant_id)->count();
+        $orders = Order::where('restaurant_id', Auth::user()->restaurant_id)
+            ->where('created_at', 'LIKE',  '%'.date('Y-m-d').'%')->count();
         return view('restaurant.dashboard', compact('orders'));
     }
 
     public function orders(Request $request){
         try {
             if (request()->ajax()) {
-                return datatables()->of(Order::with('restaurant')->orderBy('created_at','desc')->get())
+                $sql = Order::with('restaurant');
+                if ($request->has('duration') && $request->get('duration') == 'daily'){
+                    $sql = $sql->where('created_at', 'LIKE',  '%'.date('Y-m-d').'%');
+                }
+                $sql = $sql->where('restaurant_id', Auth::user()->restaurant_id)->orderBy('created_at','desc')->get();
+
+                return datatables()->of($sql)
                     ->addIndexColumn()
                     ->addColumn('customer', function ($data) {
                         return $data->customer_name ?? "Customer";
