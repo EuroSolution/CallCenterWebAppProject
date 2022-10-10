@@ -17,8 +17,8 @@ trait GeneralHelperTrait
 
     protected function uploadImage($file, $dir='uploads/'){
         $fileName = time() . '-' . $file->getClientOriginalName();
-        $file->move($dir, $fileName);
-        return $dir.$fileName;
+        $file->move('public/'.$dir, $fileName);
+        return 'public/'.$dir.$fileName;
     }
 
     protected function getImage($path){
