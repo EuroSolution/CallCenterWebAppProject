@@ -43,7 +43,7 @@
     <!-- Preloader -->
     @if(isset($setting->logo))
     <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{$setting->logo}}" alt="" height="60" width="60">
+        <img class="animation__shake" src="{{asset($setting->logo)}}" alt="" height="60" width="60">
     </div>
     @endif
 
@@ -96,7 +96,7 @@
         <!-- Brand Logo -->
         <a href="{{url('dashboard')}}" class="brand-link">
             @if(isset($setting->logo))
-                <img src="{{$setting->logo}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="{{asset($setting->logo)}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
             @endif
             <span class="brand-text font-weight-light">{{$setting->title ?? ''}}</span>
         </a>

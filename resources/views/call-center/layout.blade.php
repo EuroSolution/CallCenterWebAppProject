@@ -53,7 +53,7 @@
             <li class="nav-item">
                 <a href="{{url('dashboard')}}" class="nav-link">
                     @if(isset($setting->logo))
-                        <img src="{{$setting->logo}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8; width: 50px">
+                        <img src="{{asset($setting->logo)}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8; width: 50px">
                     @endif
                 </a>
             </li>
@@ -115,7 +115,7 @@
         <!-- Brand Logo -->
         <a href="{{url('dashboard')}}" class="brand-link">
             @if(isset($setting->logo))
-                <img src="{{$setting->logo}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="{{asset($setting->logo)}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
             @endif
             <span class="brand-text font-weight-light">{{$setting->title ?? ''}}</span>
         </a>

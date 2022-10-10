@@ -168,13 +168,10 @@
                                                 <label>Logo</label>
                                                 <div class="input-group-btn">
                                                     <div class="image-upload">
-                                                        <img src="{{ isset($content->logo) ? $content->logo : 'admin/dist/img/placeholder.png' }}"
+                                                        <img src="{{ isset($content->logo) ? asset($content->logo) : asset('admin/dist/img/placeholder.png') }}"
                                                              class="img-responsive" width="100px" height="100px">
                                                         <div class="file-btn mt-4">
                                                             <input type="file" id="logo" name="logo" accept="image/*">
-                                                            <input type="text" id="logo" name="logo"
-                                                                   value="{{ !empty($content->logo) ? $content->logo : '' }}"
-                                                                   hidden="">
                                                         </div>
                                                     </div>
                                                 </div>

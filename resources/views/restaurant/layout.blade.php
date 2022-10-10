@@ -46,7 +46,7 @@
     <!-- Preloader -->
     @if(isset($setting->logo))
     <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{$setting->logo}}" alt="" height="60" width="60">
+        <img class="animation__shake" src="{{asset($setting->logo)}}" alt="" height="60" width="60">
     </div>
     @endif
 
@@ -56,7 +56,7 @@
             <li class="nav-item">
                 <a href="{{url('dashboard')}}" class="nav-link">
                     @if(isset($setting->logo))
-                        <img src="{{$setting->logo}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8; width: 50px">
+                        <img src="{{asset($setting->logo)}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8; width: 50px">
                     @endif
                 </a>
             </li>
