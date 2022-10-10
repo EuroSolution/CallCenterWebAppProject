@@ -27,7 +27,7 @@ Route::get('/send-notification',[AdminController::class,'sendNotification']);
 
 Route::get('/', function () {
     return redirect('login');
-});
+})->name('login');
 Route::get('logout', function (){
     auth()->logout();
     return redirect('login');
