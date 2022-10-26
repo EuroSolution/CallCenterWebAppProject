@@ -64,6 +64,9 @@ class OrdersController extends Controller
 
     public function add(Request $request){
         if ($request->method() == 'POST'){
+            if (!$request->has('products') && empty($request->get('products'))){
+                return redirect()->back()->with('error', "minimum one product required")->withInput();
+            }
             $this->validate($request, [
                 'restaurant' => 'required',
                 'name' => 'required',
@@ -97,7 +100,7 @@ class OrdersController extends Controller
                         'product_id' => $product,
                         'price' => $request->input('prices')[$key] ?? 0,
                         'size' => $request->input('sizes')[$key],
-                        'quantity' => $request->input('quantities')[$key] ?? 1,
+                        'quantity' => isset($request->input('quantities')[$key]) ? $request->input('quantities')[$key] : 1,
                     ]);
                     $subTotal += $request->input('prices')[$key];
                 }
@@ -132,8 +135,11 @@ class OrdersController extends Controller
     public function edit(Request $request, $id){
         $order = Order::with('orderItems')->findOrFail($id);
         if ($request->method() == 'POST'){
+            if (!$request->has('products') && empty($request->get('products'))){
+                return redirect()->back()->with('error', "minimum one product required")->withInput();
+            }
             $this->validate($request, [
-                'restaurant' => 'required',
+                //'restaurant' => 'required',
                 'name' => 'required',
                 'phone' => 'required',
                 'address' => 'required',
@@ -157,7 +163,7 @@ class OrdersController extends Controller
                         'product_id' => $product,
                         'price' => $request->input('prices')[$key] ?? 0,
                         'size' => $request->input('sizes')[$key],
-                        'quantity' => $request->input('quantities')[$key] ?? 1,
+                        'quantity' => isset($request->input('quantities')[$key]) ? $request->input('quantities')[$key] : 1,
                     ]);
                     $subTotal += $request->input('prices')[$key];
                 }

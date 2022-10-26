@@ -143,7 +143,7 @@
 
                                 <div class="card-footer text-center">
                                     <button type="submit" class="btn btn-primary btn-md">Submit</button>
-                                    <a href="{{route('callCenter.products')}}" class="btn btn-warning btn-md">Cancel</a>
+                                    <a href="{{route('callCenter.orders')}}" class="btn btn-warning btn-md">Cancel</a>
                                 </div>
                             </form>
                         </div>
