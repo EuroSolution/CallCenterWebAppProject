@@ -48,7 +48,7 @@
 
                                             <div class="form-group">
                                                 <label for="restaurant">Select Restaurant</label>
-                                                <select class="form-control  @error('restaurant') is-invalid @enderror" name="restaurant" id="restaurant">
+                                                <select class="form-control  @error('restaurant') is-invalid @enderror" name="restaurant" id="restaurant" disabled>
                                                     <option value="">Select</option>
                                                     @foreach($restaurants as $restaurant)
                                                         <option {{($order->restaurant_id == $restaurant->id || old('restaurant')==$restaurant->id) ? 'selected' : ''}} value="{{$restaurant->id}}">{{$restaurant->name ?? ''}}</option>
@@ -166,7 +166,7 @@
 
                                 <div class="card-footer text-center">
                                     <button type="submit" class="btn btn-primary btn-md">Submit</button>
-                                    <a href="{{route('callCenter.products')}}" class="btn btn-warning btn-md">Cancel</a>
+                                    <a href="{{route('callCenter.orders')}}" class="btn btn-warning btn-md">Cancel</a>
                                 </div>
                             </form>
                         </div>
