@@ -217,5 +217,28 @@
            var price = $(this).find(':selected').data('price');
             $(this).parents('tr').find(".price").val(price);
         });
+
+        $("#phone").keyup(function (){
+            let val = $(this).val();
+            let length = val.length
+            if (length > 4){
+                $.ajax({
+                    type:'GET',
+                    url: '{{route('callCenter.searchOrder')}}',
+                    data: 'phone='+val,
+                    success: function (resp){
+                        console.log(resp);
+                        if (resp.status === true){
+                            $("#name").val(resp.data.customer_name);
+                            $("#phone").val(resp.data.customer_phone);
+                            $("#email").val(resp.data.customer_email);
+                            $("#address").val(resp.data.address);
+                            $("#city").val(resp.data.city);
+                            $("#state").val(resp.data.state);
+                        }
+                    }
+                })
+            }
+        })
     </script>
 @endsection

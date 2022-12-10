@@ -75,7 +75,7 @@ Route::prefix('call-center')->name('callCenter.')->middleware('auth')->group(fun
     Route::get('order/show/{id}', [OrdersController::class, 'show'])->name('showOrder');
     Route::delete('orders/destroy/{id}', [OrdersController::class, 'destroy'])->name('destroyOrder');
     Route::post('order/changeOrderStatus/{id}', [OrdersController::class, 'changeOrderStatus'])->name('changeOrderStatus');
-
+    Route::get('search-order', [OrdersController::class, 'searchOrder'])->name('searchOrder');
 });
 
 Route::prefix('restaurant')->name('restaurant.')->middleware('auth')->group(function (){
