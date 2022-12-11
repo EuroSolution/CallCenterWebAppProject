@@ -224,5 +224,18 @@ class OrdersController extends Controller
         }
     }
 
-
+    public function searchOrder(Request $request){
+        $order = Order::where('customer_phone', 'LIKE', '%'.$request->get('phone').'%')
+            ->orderBy('id', 'desc')->first();
+        if ($order != null){
+            return array(
+                'status' => true,
+                'data'  => $order
+            );
+        }else{
+            return array(
+                'status' => false,
+            );
+        }
+    }
 }
