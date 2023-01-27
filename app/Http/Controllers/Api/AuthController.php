@@ -39,4 +39,24 @@ class AuthController extends Controller
         $user->save();
         return $this->success($user);
     }
+
+    public function updateFcmToken(Request $request){
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required'
+        ]);
+        if ($validator->fails()){
+            return $this->error('Validation Error', 200, [], $validator->errors());
+        }
+        $user = Auth::user();
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+        return $this->success($user, 'FCM Token Updated Successfully.');
+    }
+
+    public function logout()
+    {
+        Auth::user()->tokens()->delete();
+
+        return $this->success([], 'Successfully logged out');
+    }
 }
