@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\RestaurantController;
 use App\Http\Controllers\Api\Admin\StaffController;
+use App\Http\Controllers\Api\Restaurant\DashboardController As RestaurantDashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,4 +49,14 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function (){
     Route::post('staff/edit', [StaffController::class, 'edit']);
     Route::delete('staff/delete', [StaffController::class, 'destroy']);
 
+});
+
+/*
+ *  RESTAURANT ROUTES
+ * */
+Route::prefix('restaurant')->middleware('auth:sanctum')->group(function (){
+    Route::get('/dashboard', [RestaurantDashboard::class, 'index']);
+    Route::get('orders', [RestaurantDashboard::class, 'orders']);
+    Route::get('order/detail', [RestaurantDashboard::class, 'showOrderDetail']);
+    Route::post('order/update-status', [RestaurantDashboard::class, 'changeOrderStatus']);
 });
