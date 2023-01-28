@@ -14,7 +14,7 @@ class RestaurantController extends Controller
 {
     public function index(){
         $data = Restaurant::orderBy('id', 'desc')->get();
-        $this->success($data);
+        return $this->success($data);
     }
 
     public function create(Request $request){
@@ -55,7 +55,7 @@ class RestaurantController extends Controller
                 'restaurant_id' => $content->id,
             ]);
             try{
-                if ($request->has('image')){
+                if ($request->has('image') && $request->image != null){
                     $imageUrl = $this->uploadImage($request->file('image'), 'uploads/restaurants/');
                     $content->update(['image' => $imageUrl]);
                 }
@@ -64,10 +64,11 @@ class RestaurantController extends Controller
                 return $this->error('Exception occurred while uploading image');
             }
         }
-        return $this->success($content);
+        return $this->success($content, "Restaurant created successfully");
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request){
+        $id = $request->id;
         $content = Restaurant::find($id);
         if ($content != null) {
 
@@ -91,7 +92,7 @@ class RestaurantController extends Controller
             $content->country   = $request->country ?? $content->country;
             $content->save();
             try {
-                if ($request->has('image')) {
+                if ($request->has('image') && $request->image != null) {
                     $imageUrl = $this->uploadImage($request->file('image'), 'uploads/restaurants/');
                     $content->image = $imageUrl ?? $content->image;
                 }
@@ -104,7 +105,8 @@ class RestaurantController extends Controller
         return $this->error('Restaurant Not Found');
     }
 
-    public function destroy($id){
+    public function destroy(Request $request){
+        $id = $request->id;
         $content = Restaurant::find($id);
         if ($content != null){
             $content->delete();

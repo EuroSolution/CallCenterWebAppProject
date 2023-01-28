@@ -10,11 +10,12 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
     public function dashboard(){
-        $newOrders =  Order::where('order_status', 'Pending')->count();
+        $newOrders =  Order::where('status', 'Pending')->count();
         $restaurants = Restaurant::all();
         $data = array(
             'new_orders' => $newOrders,
@@ -36,7 +37,7 @@ class AdminController extends Controller
             $content->currency  = $request->currency ?? $content->currency;
             $content->save();
             try{
-                if ($request->has('logo')){
+                if ($request->has('logo') && $request->logo != null){
                     $imageUrl = $this->uploadImage($request->file('logo'), 'uploads/settings/');
                     $content->logo = $imageUrl;
                 }
@@ -50,8 +51,8 @@ class AdminController extends Controller
     }
 
     public function showNotification(){
-        $data = Notification::where('read_at', null)->orderBy('id', 'desc')->paginate(20);
-        $this->success($data);
+        $data = Notification::where('read_at', null)->orderBy('id', 'desc')->limit(20)->get();
+        return $this->success($data);
     }
 
     public function updateNotification(Request $request){
@@ -59,22 +60,21 @@ class AdminController extends Controller
         if ($notification != null){
             $notification->read_at = date('Y-m-d H:i:s');
             $notification->save();
-            $this->success([], 'Notification status updated');
+            return $this->success([], 'Notification status updated');
         }
-        $this->error("Not Found");
+        return $this->error("Not Found");
     }
 
     public function updateToken(Request $request){
-        try{
-            $request->user()->update(['fcm_token'=>$request->token]);
-            return response()->json([
-                'success'=>true
-            ]);
-        }catch(\Exception $e){
-            report($e);
-            return response()->json([
-                'success'=>false
-            ],500);
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required'
+        ]);
+        if ($validator->fails()){
+            return $this->error('Validation Error', 200, $validator->errors());
         }
+        $user = Auth::user();
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+        return $this->success($user, 'FCM Token Updated Successfully.');
     }
 }

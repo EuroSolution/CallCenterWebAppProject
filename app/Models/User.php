@@ -26,7 +26,9 @@ class User extends Authenticatable
         'status',
         'role_name',
         'is_restaurant',
-        'restaurant_id'
+        'restaurant_id',
+        'api_token',
+        'fcm_token'
     ];
 
     /**

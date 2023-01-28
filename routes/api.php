@@ -40,12 +40,12 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function (){
 
     Route::get('restaurants', [RestaurantController::class, 'index']);
     Route::post('restaurants/create',[RestaurantController::class, 'create']);
-    Route::post('restaurants/edit/{id}',[RestaurantController::class, 'edit']);
-    Route::delete('restaurants/destroy/{id}', [RestaurantController::class, 'destroy']);
+    Route::post('restaurants/edit',[RestaurantController::class, 'edit']);
+    Route::delete('restaurants/delete', [RestaurantController::class, 'destroy']);
 
     Route::get('staff/member', [StaffController::class, 'index']);
-    Route::match(['get','post'],'add/staff',[StaffController::class, 'add']);
-    Route::match(['get','post'],'/staff/edit/{id}',[StaffController::class, 'edit']);
-    Route::delete('staff/destroy/{id}', [StaffController::class, 'destroy']);
+    Route::post('staff/create', [StaffController::class, 'add']);
+    Route::post('staff/edit', [StaffController::class, 'edit']);
+    Route::delete('staff/delete', [StaffController::class, 'destroy']);
 
 });

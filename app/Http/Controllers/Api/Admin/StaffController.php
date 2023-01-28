@@ -12,7 +12,7 @@ class StaffController extends Controller
 {
     public function index(){
         $data = User::where('role_id', 2)->orderBy('id', 'desc')->get();
-        $this->success($data);
+        return $this->success($data);
     }
 
     public function add(Request $request){
@@ -39,33 +39,18 @@ class StaffController extends Controller
         return $this->success($user,'User Added Successfully');
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request){
+        $id = $request->id;
         $content = User::find($id);
         if($content != null){
+            $password = null;
             if($request->password_edit && $request->password_edit == 1){
-                $validator = Validator::make($request->all(),[
-                    'name' => 'required',
-                    'email' => 'required|email',
-                    'password' => 'required',
-                    'phone' => 'required'
-                ]);
-
                 $password = $request->password;
-            }else{
-                $validator = Validator::make($request->all(),[
-                    'name' => 'required',
-                    'email' => 'required|email',
-                    'phone' => 'required'
-                ]);
+            }
 
-                $password = null;
-            }
-            if ($validator->fails()){
-                return $this->error('Validation Error', $validator->errors());
-            }
-            $content->name = $request->name;
-            $content->email = $request->email;
-            $content->phone = $request->phone;
+            $content->name = $request->name ?? $content->name;
+            $content->email = $request->email ?? $content->email;
+            $content->phone = $request->phone ?? $content->phone;
             if(isset($password) && $password != '' && $password != null){
                 $content->password = Hash::make($password);
             }
@@ -77,7 +62,8 @@ class StaffController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy(Request $request){
+        $id = $request->id;
         $staff = User::find($id);
         if ($staff != null){
             $staff->delete();
