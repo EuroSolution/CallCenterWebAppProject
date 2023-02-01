@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('image')->nullable();
-            $table->softDeletes();
+            //$table->softDeletes();
             $table->timestamps();
         });
     }

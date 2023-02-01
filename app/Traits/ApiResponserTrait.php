@@ -28,7 +28,7 @@ trait ApiResponserTrait
         return response()->json([
             'status' => true,
             'message' => $message,
-            'data' => (object) $data,
+            'data' => $data,
             'errors' => (object) $errors
         ], $code);
     }

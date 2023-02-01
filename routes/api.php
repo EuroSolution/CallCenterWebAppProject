@@ -4,7 +4,11 @@ use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\RestaurantController;
 use App\Http\Controllers\Api\Admin\StaffController;
+use App\Http\Controllers\Api\CallCenter\CategoryController;
+use App\Http\Controllers\Api\CallCenter\OrdersController;
+use App\Http\Controllers\Api\CallCenter\ProductController;
 use App\Http\Controllers\Api\Restaurant\DashboardController As RestaurantDashboard;
+use App\Http\Controllers\Api\CallCenter\DashboardController As CallCenterDashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,4 +63,32 @@ Route::prefix('restaurant')->middleware('auth:sanctum')->group(function (){
     Route::get('orders', [RestaurantDashboard::class, 'orders']);
     Route::get('order/detail', [RestaurantDashboard::class, 'showOrderDetail']);
     Route::post('order/update-status', [RestaurantDashboard::class, 'changeOrderStatus']);
+});
+
+/*
+ *  CALL CENTER USER ROUTES
+ * */
+Route::prefix('call-center')->middleware('auth:sanctum')->group(function (){
+    Route::get('/dashboard', [CallCenterDashboard::class, 'index']);
+
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('main-categories', [CategoryController::class, 'getMainCategories']);
+    Route::post('category/add', [CategoryController::class, 'add']);
+    Route::post('category/edit', [CategoryController::class, 'edit']);
+    Route::get('category/show', [CategoryController::class, 'show']);
+    Route::delete('category/delete', [CategoryController::class, 'destroy']);
+
+    Route::get('products', [ProductController::class, 'index']);
+    Route::post('product/add', [ProductController::class, 'add']);
+    Route::post('product/edit', [ProductController::class, 'edit']);
+    Route::post('product/show', [ProductController::class, 'show']);
+    Route::delete('product/delete', [ProductController::class, 'destroy']);
+
+    Route::get('orders', [OrdersController::class, 'index']);
+    Route::post('order/add', [OrdersController::class, 'add']);
+    Route::post('order/edit', [OrdersController::class, 'edit']);
+    Route::get('order/show', [OrdersController::class, 'show']);
+    Route::delete('orders/delete', [OrdersController::class, 'destroy']);
+    Route::post('order/change-order-status', [OrdersController::class, 'changeOrderStatus']);
+    Route::post('order/search', [OrdersController::class, 'searchOrder']);
 });

@@ -15,6 +15,15 @@ class Product extends Model
         'type', 'status', 'image', 'slug'
     ];
 
+    public function getImageAttribute(){
+        $value = $this->attributes['image'];
+        if (isset($value) && file_exists($value)){
+            return asset($value);
+        }else{
+            return asset('admin/dist/img/placeholder.png');
+        }
+    }
+
     public function category(){
         return $this->belongsTo(Category::class);
     }
