@@ -8,112 +8,108 @@ use App\Models\Product;
 use App\Models\ProductSize;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index(){
-        $products = Product::with('category')->get();
+    public function index(Request $request){
+        $products = Product::with('category');
+        if ($request->restaurant_id != null){
+            $products = $products->where('restaurant_id', $request->restaurant_id);
+        }
         return $this->success($products);
     }
 
     public function add(Request $request){
-        if ($request->method() == 'POST'){
-            $this->validate($request, array(
-                'name' => 'required',
-                'category' => 'required',
-                'restaurant' => 'required',
-                'price'	   => 'numeric'
-            ));
 
-            $product = Product::create([
-                'name' => $request->input('name'),
-                'category_id' => $request->input('category'),
-                'restaurant_id' => $request->input('restaurant') ?? 0,
-                'description' => $request->input('description'),
-                'price' => $request->input('price') ?? 0.00,
-                'slug' => $this->createSlug($request->input('name')),
-                'type' => $request->input('type')
-            ]);
-
-            if (!empty($request->get('sizes'))){
-                foreach ($request->get('sizes') as $sKey => $size){
-                    if ($size != null){
-                        ProductSize::create([
-                            'product_id' => $product->id,
-                            'size' => $size,
-                            'price' => $request->get('size_prices')[$sKey] ?? 0,
-                            'discounted_price' => 0.00,
-                        ]);
-                    }
-                }
-            }
-
-            if ($request->has('file')){
-                $imageUrl = $this->uploadImage($request->file('file'), 'uploads/products/');
-                $product->update(['image' => $imageUrl]);
-            }
-            return redirect()->back()->with(['success' => 'Product Added Successfully']);
+        $validator = Validator::make($request->all(), array(
+            'name' => 'required',
+            'category_id' => 'required',
+            'restaurant_id' => 'required',
+            'price'	   => 'numeric'
+        ));
+        if ($validator->fails()){
+            return $this->error("Validation Error", 200, $validator->errors());
         }
 
-        $categories = Category::get();
-        $restaurants = Restaurant::where('status', 1)->get();
-        return view('call-center.product.add-product', compact('categories', 'restaurants'));
-    }
+        $product = Product::create([
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'restaurant_id' => $request->restaurant_id ?? 0,
+            'description' => $request->description,
+            'price' => $request->price ?? 0.00,
+            'slug' => $this->createSlug($request->name),
+            'type' => $request->type
+        ]);
 
-
-    public function show($id)
-    {
-        $product = Product::where('id', $id)->firstOrFail();
-        return view('call-center.product.view', compact('product'));
-    }
-
-
-    public function edit(Request $request, $id)
-    {
-        $content = Product::with('productSizes')->findOrFail($id);
-        if ($request->method() == "POST"){
-            $this->validate($request, array(
-                'name' => 'required',
-                'category' => 'required',
-                'restaurant' => 'required',
-                'price'	   => 'numeric'
-            ));
-
-            $content->name = $request->input('name');
-            $content->description = $request->input('description');
-            $content->restaurant_id = $request->input('restaurant');
-            $content->price = $request->input('price');
-            $content->type = $request->input('type');
-            if ($request->has('file')){
-                $imageUrl = $this->uploadImage($request->file('file'), 'uploads/products/');
-                $content->image = $imageUrl;
-            }
-            $content->save();
-
-            ProductSize::where('product_id', $id)->delete();
-            if (!empty($request->get('sizes'))){
-                foreach ($request->get('sizes') as $sKey => $size){
+        if (!empty($request->sizes)){
+            foreach ($request->sizes as $sKey => $size){
+                if ($size != null){
                     ProductSize::create([
-                        'product_id' => $id,
+                        'product_id' => $product->id,
                         'size' => $size,
-                        'price' => $request->get('size_prices')[$sKey] ?? 0,
+                        'price' => $request->size_prices[$sKey] ?? 0,
                         'discounted_price' => 0.00,
                     ]);
                 }
             }
-            return redirect()->back()->with('success', 'Product Updated successfully');
         }
-        $restaurants = Restaurant::where('status', 1)->get();
-        $categories = Category::get();
-        return view('call-center.product.update-product', compact('content','categories', 'restaurants'));
+
+//        if ($request->has('file')){
+//            $imageUrl = $this->uploadImage($request->file('file'), 'uploads/products/');
+//            $product->update(['image' => $imageUrl]);
+//        }
+
+        return $this->success($product, 'Product Added Successfully');
     }
 
-    public function destroy($id)
+
+    public function show(Request $request){
+        $product = Product::find($request->id);
+        return $this->success($product);
+    }
+
+
+    public function edit(Request $request, $id){
+
+        $content = Product::with('productSizes')->find($id);
+
+        $content->name = $request->name ?? $content->name;
+        $content->category_id = $request->category_id ?? $content->category_id;
+        $content->description = $request->description ?? $content->description;
+        $content->restaurant_id = $request->restaurant_id ?? $content->restaurant_id;
+        $content->price = $request->price ?? $content->price;
+        $content->type = $request->type ?? $content->type;
+//            if ($request->has('file')){
+//                $imageUrl = $this->uploadImage($request->file('file'), 'uploads/products/');
+//                $content->image = $imageUrl;
+//            }
+        $content->save();
+
+        ProductSize::where('product_id', $id)->delete();
+        if (!empty($request->sizes)){
+            foreach ($request->sizes as $sKey => $size){
+                ProductSize::create([
+                    'product_id' => $id,
+                    'size' => $size,
+                    'price' => $request->size_prices[$sKey] ?? 0,
+                    'discounted_price' => 0.00,
+                ]);
+            }
+        }
+        return $this->success($content, 'Product Updated successfully');
+    }
+
+    public function destroy(Request $request)
     {
-        $content = Product::find($id);
-        $content->delete();
-        echo 1;
+        $content = Product::find($request->id);
+        if ($content != null) {
+            $content->delete();
+            return $this->success([], "Product deleted successfully");
+        }else{
+            return $this->error("Product not found");
+        }
     }
 
     private function createSlug($str){

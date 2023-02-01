@@ -79,16 +79,16 @@ Route::prefix('call-center')->middleware('auth:sanctum')->group(function (){
     Route::delete('category/delete', [CategoryController::class, 'destroy']);
 
     Route::get('products', [ProductController::class, 'index']);
-    Route::match(['get', 'post'],'/product/add', [ProductController::class, 'add'])->name('addProduct');
-    Route::match(['get', 'post'],'/product/edit/{id}', [ProductController::class, 'edit'])->name('editProduct');
-    Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('showProduct');
-    Route::delete('products/destroy/{id}', [ProductController::class, 'destroy'])->name('destroyProduct');
+    Route::post('product/add', [ProductController::class, 'add']);
+    Route::post('product/edit', [ProductController::class, 'edit']);
+    Route::post('product/show', [ProductController::class, 'show']);
+    Route::delete('product/delete', [ProductController::class, 'destroy']);
 
-    Route::get('orders', [OrdersController::class, 'index'])->name('orders');
-    Route::match(['get', 'post'],'/order/add', [OrdersController::class, 'add'])->name('addOrder');
-    Route::match(['get', 'post'],'/order/edit/{id}', [OrdersController::class, 'edit'])->name('editOrder');
-    Route::get('order/show/{id}', [OrdersController::class, 'show'])->name('showOrder');
-    Route::delete('orders/destroy/{id}', [OrdersController::class, 'destroy'])->name('destroyOrder');
-    Route::post('order/changeOrderStatus/{id}', [OrdersController::class, 'changeOrderStatus'])->name('changeOrderStatus');
-    Route::get('search-order', [OrdersController::class, 'searchOrder'])->name('searchOrder');
+    Route::get('orders', [OrdersController::class, 'index']);
+    Route::post('order/add', [OrdersController::class, 'add']);
+    Route::post('order/edit', [OrdersController::class, 'edit']);
+    Route::get('order/show', [OrdersController::class, 'show']);
+    Route::delete('orders/delete', [OrdersController::class, 'destroy']);
+    Route::post('order/change-order-status', [OrdersController::class, 'changeOrderStatus']);
+    Route::post('order/search', [OrdersController::class, 'searchOrder']);
 });

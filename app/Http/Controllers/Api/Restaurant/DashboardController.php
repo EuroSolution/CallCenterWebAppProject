@@ -38,7 +38,7 @@ class DashboardController extends Controller
                 'customer_email' => $order->customer_email,
                 'total' => $order->total,
                 'status' => $order->status,
-                'order_date' => date('d-M-Y H:i:s', strtotime($data->created_at)),
+                'order_date' => date('d-M-Y H:i:s', strtotime($order->created_at)),
             );
         }
         return $this->success($data);
