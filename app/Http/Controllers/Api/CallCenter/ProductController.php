@@ -22,7 +22,7 @@ class ProductController extends Controller
     }
 
     public function add(Request $request){
-
+    
         $validator = Validator::make($request->all(), array(
             'name' => 'required',
             'category_id' => 'required',

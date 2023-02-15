@@ -82,10 +82,12 @@ trait GeneralHelperTrait
       
        $image = str_replace(' ', '+', $image); 
       
-       $imageName = Str::random(10).'.'.$extension;
+       $imageName = Str::random(20).'.'.$extension;
 
-       Storage::disk('public_upload')->put($dir.$imageName, base64_decode($image));      
-
-       return 'uploads/products/'.$imageName;
+       if(Storage::disk('public_upload')->put($dir.$imageName, base64_decode($image))){
+            return url('uploads/'.$dir.$imageName); 
+       }else{
+            return false;
+       }      
     }
 }
