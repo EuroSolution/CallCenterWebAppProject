@@ -55,8 +55,12 @@ class RestaurantController extends Controller
                 'restaurant_id' => $content->id,
             ]);
             try{
-                if ($request->has('image') && $request->image != null){
+                /*if ($request->has('image') && $request->image != null){
                     $imageUrl = $this->uploadImage($request->file('image'), 'uploads/restaurants/');
+                    $content->update(['image' => $imageUrl]);
+                }*/
+                if(isset($request->image) && !empty($request->image)){
+                    $imageUrl = $this->uploadEncodedImage($request->image, 'restaurants/');
                     $content->update(['image' => $imageUrl]);
                 }
 

@@ -52,6 +52,12 @@ class CategoryController extends Controller
 
         $slugStr = Str::of($request->name)->slug('-');
 
+        //Save base64 image
+        $imageUrl = '';
+        if(isset($request->image)){
+            $imageUrl = $this->uploadEncodedImage($request->image, 'categories/');
+        }
+
         $category = Category::create([
             'name' => $request->name,
             'parent_id' => $request->main_category,

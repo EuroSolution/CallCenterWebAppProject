@@ -33,6 +33,12 @@ class ProductController extends Controller
             return $this->error("Validation Error", 200, $validator->errors());
         }
 
+        //Save base64 image
+        $imageUrl = '';
+        if(isset($request->image)){
+            $imageUrl = $this->uploadEncodedImage($request->image, 'products/');
+        }
+
         $product = Product::create([
             'name' => $request->name,
             'category_id' => $request->category_id,
@@ -40,7 +46,8 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price ?? 0.00,
             'slug' => $this->createSlug($request->name),
-            'type' => $request->type
+            'type' => $request->type,
+            'image' => $imageUrl
         ]);
 
         if (!empty($request->sizes)){
