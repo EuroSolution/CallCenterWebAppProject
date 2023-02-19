@@ -83,6 +83,7 @@ Route::prefix('call-center')->middleware('auth:sanctum')->group(function (){
     Route::post('product/edit', [ProductController::class, 'edit']);
     Route::post('product/show', [ProductController::class, 'show']);
     Route::delete('product/delete', [ProductController::class, 'destroy']);
+    Route::get('products-by-restaurant/{restaurantId}', [ProductController::class, 'getProductsByRestaurantId']);
 
     Route::get('orders', [OrdersController::class, 'index']);
     Route::post('order/add', [OrdersController::class, 'add']);

@@ -131,4 +131,10 @@ class ProductController extends Controller
         }
         return $slug;
     }
+
+    public function getProductsByRestaurantId(Request $request, $restaurantId){
+
+        $products = Product::with(['category','productSizes'])->where('restaurant_id',$restaurantId)->get();
+        return $this->success($products);
+    }
 }
