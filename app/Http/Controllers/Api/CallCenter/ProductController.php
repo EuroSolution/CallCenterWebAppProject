@@ -18,7 +18,7 @@ class ProductController extends Controller
         if ($request->restaurant_id != null){
             $products = $products->where('restaurant_id', $request->restaurant_id);
         }
-        return $this->success($products);
+        return $this->success($products->get());
     }
 
     public function add(Request $request){
