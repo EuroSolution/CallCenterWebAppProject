@@ -19,6 +19,7 @@ class CategoryController extends Controller
             $data[] = array(
                 'id' => $category->id,
                 'image' => $this->getImage($category->image),
+                'name' => $category->name,
                 'parent_category' => $category->parentCategory != null ? $category->parentCategory->name : '--',
                 'slug' => $category->slug
             );
@@ -34,6 +35,7 @@ class CategoryController extends Controller
             $data[] = array(
                 'id' => $category->id,
                 'image' => $this->getImage($category->image),
+                'name' => $category->name,
                 'parent_category' => $category->parentCategory != null ? $category->parentCategory->name : '--',
                 'slug' => $category->slug
             );
