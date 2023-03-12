@@ -17,10 +17,14 @@ class Product extends Model
 
     public function getImageAttribute(){
         $value = $this->attributes['image'];
-        if (isset($value) && file_exists($value)){
-            return asset($value);
+        if (str_contains($value, 'http://') || str_contains($value, 'https://')){
+            return $value;
         }else{
-            return asset('admin/dist/img/placeholder.png');
+            if (isset($value) && file_exists($value)){
+                return asset($value);
+            }else{
+                return asset('admin/dist/img/placeholder.png');
+            }
         }
     }
 
