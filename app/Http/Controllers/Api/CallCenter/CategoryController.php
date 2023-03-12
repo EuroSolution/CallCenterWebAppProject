@@ -19,6 +19,7 @@ class CategoryController extends Controller
             $data[] = array(
                 'id' => $category->id,
                 'image' => $this->getImage($category->image),
+                'name' => $category->name,
                 'parent_category' => $category->parentCategory != null ? $category->parentCategory->name : '--',
                 'slug' => $category->slug
             );
@@ -34,6 +35,7 @@ class CategoryController extends Controller
             $data[] = array(
                 'id' => $category->id,
                 'image' => $this->getImage($category->image),
+                'name' => $category->name,
                 'parent_category' => $category->parentCategory != null ? $category->parentCategory->name : '--',
                 'slug' => $category->slug
             );
@@ -51,6 +53,12 @@ class CategoryController extends Controller
         }
 
         $slugStr = Str::of($request->name)->slug('-');
+
+        //Save base64 image
+        $imageUrl = '';
+        if(isset($request->image)){
+            $imageUrl = $this->uploadEncodedImage($request->image, 'categories/');
+        }
 
         $category = Category::create([
             'name' => $request->name,

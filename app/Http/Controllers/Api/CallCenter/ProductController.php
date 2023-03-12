@@ -18,11 +18,11 @@ class ProductController extends Controller
         if ($request->restaurant_id != null){
             $products = $products->where('restaurant_id', $request->restaurant_id);
         }
-        return $this->success($products);
+        return $this->success($products->get());
     }
 
     public function add(Request $request){
-
+    
         $validator = Validator::make($request->all(), array(
             'name' => 'required',
             'category_id' => 'required',
@@ -33,6 +33,12 @@ class ProductController extends Controller
             return $this->error("Validation Error", 200, $validator->errors());
         }
 
+        //Save base64 image
+        $imageUrl = '';
+        if(isset($request->image)){
+            $imageUrl = $this->uploadEncodedImage($request->image, 'products/');
+        }
+
         $product = Product::create([
             'name' => $request->name,
             'category_id' => $request->category_id,
@@ -40,7 +46,8 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price ?? 0.00,
             'slug' => $this->createSlug($request->name),
-            'type' => $request->type
+            'type' => $request->type,
+            'image' => $imageUrl
         ]);
 
         if (!empty($request->sizes)){
@@ -123,5 +130,11 @@ class ProductController extends Controller
             }
         }
         return $slug;
+    }
+
+    public function getProductsByRestaurantId(Request $request, $restaurantId){
+
+        $products = Product::with(['category','productSizes'])->where('restaurant_id',$restaurantId)->get();
+        return $this->success($products);
     }
 }

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use ImageKit\ImageKit;
 use Exception;
 use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 trait GeneralHelperTrait
@@ -65,5 +67,27 @@ trait GeneralHelperTrait
         }catch (Exception $ex){
             return array('success'=> false, 'error' => $ex->getMessage());
         }
+    }
+
+    //Upload Base64 Image
+    protected function uploadEncodedImage($image_64, $dir='uploads/'){
+
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+      
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1); 
+      
+      // find substring fro replace here eg: data:image/png;base64,
+      
+       $image = str_replace($replace, '', $image_64); 
+      
+       $image = str_replace(' ', '+', $image); 
+      
+       $imageName = Str::random(20).'.'.$extension;
+
+       if(Storage::disk('public_upload')->put($dir.$imageName, base64_decode($image))){
+            return url('uploads/'.$dir.$imageName); 
+       }else{
+            return false;
+       }      
     }
 }

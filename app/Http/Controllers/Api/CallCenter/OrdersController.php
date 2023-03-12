@@ -119,6 +119,9 @@ class OrdersController extends Controller
 
     public function edit(Request $request){
         $order = Order::with('orderItems')->find($request->id);
+        if ($order == null){
+            return $this->error("Order Not Found");
+        }
         if ($request->products == null || empty($request->products)){
             return $this->error("Minimum one product required");
         }
