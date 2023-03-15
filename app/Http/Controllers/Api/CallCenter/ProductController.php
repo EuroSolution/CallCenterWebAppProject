@@ -22,7 +22,7 @@ class ProductController extends Controller
     }
 
     public function add(Request $request){
-    
+
         $validator = Validator::make($request->all(), array(
             'name' => 'required',
             'category_id' => 'required',
@@ -78,34 +78,39 @@ class ProductController extends Controller
     }
 
 
-    public function edit(Request $request, $id){
-
+    public function edit(Request $request){
+        $id = $request->id;
         $content = Product::with('productSizes')->find($id);
 
-        $content->name = $request->name ?? $content->name;
-        $content->category_id = $request->category_id ?? $content->category_id;
-        $content->description = $request->description ?? $content->description;
-        $content->restaurant_id = $request->restaurant_id ?? $content->restaurant_id;
-        $content->price = $request->price ?? $content->price;
-        $content->type = $request->type ?? $content->type;
+        if ($content != null){
+            $content->name = $request->name ?? $content->name;
+            $content->category_id = $request->category_id ?? $content->category_id;
+            $content->description = $request->description ?? $content->description;
+            $content->restaurant_id = $request->restaurant_id ?? $content->restaurant_id;
+            $content->price = $request->price ?? $content->price;
+            $content->type = $request->type ?? $content->type;
 //            if ($request->has('file')){
 //                $imageUrl = $this->uploadImage($request->file('file'), 'uploads/products/');
 //                $content->image = $imageUrl;
 //            }
-        $content->save();
+            $content->save();
 
-        ProductSize::where('product_id', $id)->delete();
-        if (!empty($request->sizes)){
-            foreach ($request->sizes as $sKey => $size){
-                ProductSize::create([
-                    'product_id' => $id,
-                    'size' => $size,
-                    'price' => $request->size_prices[$sKey] ?? 0,
-                    'discounted_price' => 0.00,
-                ]);
+            ProductSize::where('product_id', $id)->delete();
+            if (!empty($request->sizes)){
+                foreach ($request->sizes as $sKey => $size){
+                    ProductSize::create([
+                        'product_id' => $id,
+                        'size' => $size,
+                        'price' => $request->size_prices[$sKey] ?? 0,
+                        'discounted_price' => 0.00,
+                    ]);
+                }
             }
+            return $this->success($content, 'Product Updated successfully');
+        }else{
+            return $this->error('Product not found');
         }
-        return $this->success($content, 'Product Updated successfully');
+
     }
 
     public function destroy(Request $request)
